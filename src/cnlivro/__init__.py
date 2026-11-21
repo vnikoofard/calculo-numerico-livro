@@ -14,6 +14,7 @@ redes        rede totalmente conectada, padronizador e laço de treino em PyTorc
 derivacao    diferenças finitas, Richardson, passo complexo, derivada de dados (cap. 10)
 integracao   trapézio, Simpson, Gauss-Legendre, Romberg, Simpson adaptativo, Monte Carlo (cap. 11)
 edo          Euler, RK4, RK45 adaptativo, implícitos, Verlet, tiro, diferenças finitas, Schrödinger (caps. 12-14)
+edp          advecção-difusão (upwind, Lax-Wendroff), calor (método θ), Poisson 2D, Burgers, laplacianos, elementos finitos 1D (caps. 15-16)
 
 Os demais módulos (sistemas lineares, interpolação, EDOs...) serão portados do
 ``cn_utils.py`` das notas antigas à medida que os capítulos forem reescritos.
