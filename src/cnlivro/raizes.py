@@ -101,15 +101,22 @@ def ponto_fixo(g: Funcao, x0: float, tol: float = 1e-10, max_iter: int = 200) ->
     return Resultado(x, False, max_iter, historico, erros, "máximo de iterações")
 
 
-def newton(f: Funcao, df: Funcao, x0: float, tol: float = 1e-10, max_iter: int = 50) -> Resultado:
-    """Método de Newton-Raphson: x_{k+1} = x_k - f(x_k)/f'(x_k)."""
+def newton(
+    f: Funcao, df: Funcao, x0: float, tol: float = 1e-10, max_iter: int = 50, m: int = 1
+) -> Resultado:
+    """Método de Newton-Raphson: x_{k+1} = x_k - m·f(x_k)/f'(x_k).
+
+    ``m`` é a multiplicidade da raiz. Com ``m = 1`` (padrão) é o método
+    clássico; com a multiplicidade correta, recupera a convergência
+    quadrática em raízes múltiplas.
+    """
     historico, erros = [x0], []
     x = x0
     for k in range(1, max_iter + 1):
         d = df(x)
         if d == 0:
             return Resultado(x, False, k - 1, historico, erros, "derivada nula")
-        x_novo = x - f(x) / d
+        x_novo = x - m * f(x) / d
         historico.append(x_novo)
         erros.append(_erro_relativo(x_novo, x))
         x = x_novo

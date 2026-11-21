@@ -64,3 +64,10 @@ def test_ordem_observada_diferenca_central():
     h = [0.1 / 2**k for k in range(6)]
     erro = [abs((math.sin(1 + hk) - math.sin(1 - hk)) / (2 * hk) - math.cos(1)) for hk in h]
     assert ordem_observada(h, erro) == pytest.approx(2, abs=0.05)
+
+
+def test_newton_modificado_recupera_ordem_2_em_raiz_dupla():
+    r = raizes.newton(lambda x: (x - 1) ** 2 * (x - 3), lambda x: (x - 1) * (3 * x - 7), 0.0, m=2)
+    assert r.convergiu
+    assert r.raiz == pytest.approx(1.0, abs=1e-8)
+    assert ordem_iterativa(r.historico, 1.0) == pytest.approx(2, abs=0.3)
