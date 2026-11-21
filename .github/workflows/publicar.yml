@@ -44,7 +44,10 @@ jobs:
             texlive-latex-extra texlive-fonts-recommended texlive-lang-portuguese \
             texlive-science texlive-plain-generic lmodern fonts-dejavu-core
       - name: Instalar dependências
-        run: pip install -r requirements.txt
+        # PyTorch só para CPU: o pacote padrão traz as bibliotecas CUDA (vários GB).
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
       - name: Construir o PDF
         run: scripts/construir_pdf.sh
       - uses: actions/upload-artifact@v4
@@ -70,7 +73,10 @@ jobs:
         with:
           node-version: 24.x
       - name: Instalar dependências
-        run: pip install -r requirements.txt
+        # PyTorch só para CPU: o pacote padrão traz as bibliotecas CUDA (vários GB).
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
       - name: Construir o site (executando os notebooks)
         run: jupyter book build --html --execute
       - name: Incluir o pacote cnlivro no site (usado pelo JupyterLite)
