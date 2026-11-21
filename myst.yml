@@ -36,9 +36,9 @@ project:
         - file: livro/05-otimizacao.ipynb
     - title: Parte III — Dados e aproximação
       children:
-        - file: livro/06-interpolacao.md
-        - file: livro/07-minimos-quadrados.md
-        - file: livro/08-autovalores-svd.md
+        - file: livro/06-interpolacao.ipynb
+        - file: livro/07-minimos-quadrados.ipynb
+        - file: livro/08-autovalores-svd.ipynb
         - file: livro/09-aprendizado-de-maquina.md
     - title: Parte IV — Cálculo
       children:
