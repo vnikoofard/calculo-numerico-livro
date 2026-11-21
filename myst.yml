@@ -16,10 +16,15 @@ project:
   # (JupyterLite/Pyodide), sem servidor e sem instalar nada.
   jupyter:
     lite: true
+  settings:
+    myst_to_tex:
+      code_style: minted
   exports:
     - id: livro-pdf
       format: pdf
-      template: plain_latex_book
+      # Modelo próprio (latex/livro): realce do código, quebra de linhas, saídas
+      # destacadas, acentos e símbolos, português e título do capítulo no cabeçalho.
+      template: latex/livro
       output: exports/calculo-numerico.pdf
   toc:
     - file: livro/index.md
