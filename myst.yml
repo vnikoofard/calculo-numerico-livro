@@ -32,8 +32,8 @@ project:
     - title: Parte II — Equações e sistemas
       children:
         - file: livro/03-raizes.ipynb
-        - file: livro/04-sistemas-lineares.md
-        - file: livro/05-otimizacao.md
+        - file: livro/04-sistemas-lineares.ipynb
+        - file: livro/05-otimizacao.ipynb
     - title: Parte III — Dados e aproximação
       children:
         - file: livro/06-interpolacao.md
