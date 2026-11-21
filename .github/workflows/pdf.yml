@@ -29,7 +29,10 @@ jobs:
             texlive-latex-extra texlive-fonts-recommended texlive-lang-portuguese \
             texlive-science texlive-plain-generic lmodern
       - name: Instalar dependências
-        run: pip install -r requirements.txt
+        # PyTorch só para CPU: o pacote padrão traz as bibliotecas CUDA (vários GB).
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
       - name: Construir o PDF
         run: |
           export BROWSER_PATH="$(which google-chrome || which chromium || true)"

@@ -19,7 +19,10 @@ jobs:
         with:
           node-version: 22.x
       - name: Instalar dependências
-        run: pip install -r requirements.txt
+        # PyTorch só para CPU: o pacote padrão traz as bibliotecas CUDA (vários GB).
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
       - name: Testes do pacote cnlivro
         run: pytest -q
       - name: Construir o site (executando os notebooks)

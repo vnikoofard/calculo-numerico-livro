@@ -39,11 +39,11 @@ project:
         - file: livro/06-interpolacao.ipynb
         - file: livro/07-minimos-quadrados.ipynb
         - file: livro/08-autovalores-svd.ipynb
-        - file: livro/09-aprendizado-de-maquina.md
+        - file: livro/09-aprendizado-de-maquina.ipynb
     - title: Parte IV — Cálculo
       children:
-        - file: livro/10-derivacao.md
-        - file: livro/11-integracao.md
+        - file: livro/10-derivacao.ipynb
+        - file: livro/11-integracao.ipynb
     - title: Parte V — Equações diferenciais
       children:
         - file: livro/12-edo-valor-inicial.md
