@@ -28,8 +28,7 @@ project:
       output: exports/calculo-numerico.pdf
   toc:
     - file: livro/index.md
-    - file: livro/demonstracao.ipynb
-    - file: livro/00-como-usar.ipynb
+    - file: livro/00-como-usar.md
     - title: Parte I — Fundamentos
       children:
         - file: livro/01-modelagem.ipynb
@@ -73,5 +72,7 @@ site:
     - title: Baixar PDF
       url: https://vnikoofard.github.io/calculo-numerico-livro/calculo-numerico.pdf
   options:
+    # Texto no canto superior esquerdo (sem ele, o tema mostra "Made with MyST")
+    logo_text: Cálculo Numérico na era dos agentes
     folders: true
     hide_footer_links: false

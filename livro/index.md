@@ -24,6 +24,6 @@ Todos os capítulos seguem as mesmas sete seções:
 - **No seu computador:** clone o repositório e instale as dependências com `pip install -r requirements.txt`.
 - **Em PDF:** [baixe o livro em PDF](https://vnikoofard.github.io/calculo-numerico-livro/calculo-numerico.pdf). A versão impressa traz as mesmas figuras, em forma estática, e é atualizada a cada nova versão do site. O botão **Baixar PDF**, no topo de todas as páginas, leva ao mesmo arquivo.
 
-Comece pela página [Demonstração dos padrões](./demonstracao.ipynb), que mostra os gráficos e os controles interativos usados no livro.
+Comece pelo capítulo [Como usar este livro com um agente de IA](./00-como-usar.md), que apresenta o ciclo de trabalho seguido em todos os capítulos.
 
 Estas notas partem do livro *Numerical Methods for Engineers*, de Steven Chapra e Raymond Canale, que continua sendo a leitura de apoio.
