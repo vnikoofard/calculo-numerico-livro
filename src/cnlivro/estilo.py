@@ -1,0 +1,220 @@
+"""Estilo gráfico único do livro.
+
+Todas as figuras do livro passam por este módulo, para que tenham a mesma
+aparência na versão web (interativa) e na versão em PDF (estática).
+
+Uso típico no início de cada capítulo::
+
+    from cnlivro.estilo import aplicar_estilo, mostrar, CORES
+    aplicar_estilo()
+
+    fig = go.Figure(...)
+    mostrar(fig)
+
+A função :func:`mostrar` envia ao notebook a figura interativa do Plotly e,
+quando a variável de ambiente ``CNLIVRO_PNG=1`` está definida (como na
+construção do PDF), também uma imagem PNG da mesma figura. O Jupyter Book usa
+a versão interativa no site e a imagem no PDF.
+"""
+
+from __future__ import annotations
+
+import os
+
+import plotly.graph_objects as go
+import plotly.io as pio
+
+# ---------------------------------------------------------------------------
+# Paleta: cada cor tem um PAPEL fixo em todo o livro.
+# Baseada na paleta Okabe-Ito, segura para daltonismo.
+# ---------------------------------------------------------------------------
+CORES = {
+    "exata": "#222222",        # solução exata ou de referência
+    "aproximacao": "#0072B2",  # resultado do método numérico
+    "erro": "#D55E00",         # erros e resíduos
+    "referencia": "#999999",   # retas de ordem teórica, guias
+    "destaque": "#009E73",     # ponto atual, raiz, valor de interesse
+    "secundaria": "#CC79A7",   # segundo método numa comparação
+    "terciaria": "#E69F00",    # terceiro método numa comparação
+}
+
+# Ordem das cores quando há várias séries sem papel definido.
+SEQUENCIA = [
+    CORES["aproximacao"],
+    CORES["secundaria"],
+    CORES["terciaria"],
+    CORES["destaque"],
+    CORES["erro"],
+    "#56B4E9",
+]
+
+FONTE = "Inter, 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif"
+LARGURA_PADRAO = 720
+ALTURA_PADRAO = 420
+
+
+def _template() -> go.layout.Template:
+    eixo = dict(
+        showline=True,
+        linecolor="#444444",
+        linewidth=1,
+        ticks="outside",
+        tickcolor="#444444",
+        gridcolor="#E5E5E5",
+        zeroline=False,
+        title_standoff=8,
+        exponentformat="power",
+    )
+    return go.layout.Template(
+        layout=dict(
+            font=dict(family=FONTE, size=14, color="#222222"),
+            title=dict(font=dict(size=16), x=0.0, xanchor="left"),
+            paper_bgcolor="white",
+            plot_bgcolor="white",
+            colorway=SEQUENCIA,
+            xaxis=eixo,
+            yaxis=eixo,
+            legend=dict(bgcolor="rgba(255,255,255,0.8)", borderwidth=0),
+            margin=dict(l=70, r=20, t=50, b=60),
+            width=LARGURA_PADRAO,
+            height=ALTURA_PADRAO,
+            hoverlabel=dict(font_family=FONTE),
+            # Vírgula como separador decimal e ponto como separador de milhar.
+            separators=",.",
+        ),
+        data=dict(
+            scatter=[go.Scatter(line=dict(width=2.5, simplify=False), marker=dict(size=8))],
+        ),
+    )
+
+
+def aplicar_estilo() -> None:
+    """Registra o tema ``cnlivro`` do Plotly e o torna o tema padrão."""
+    pio.templates["cnlivro"] = _template()
+    pio.templates.default = "cnlivro"
+
+
+def mostrar(fig: go.Figure, png: bool | None = None, escala: float = 2.0) -> None:
+    """Mostra uma figura no notebook com versão interativa e, opcionalmente, estática.
+
+    Parameters
+    ----------
+    fig:
+        Figura do Plotly.
+    png:
+        Se ``True``, inclui também uma imagem PNG (necessária para o PDF).
+        Se ``None``, segue a variável de ambiente ``CNLIVRO_PNG``.
+    escala:
+        Fator de resolução da imagem PNG.
+    """
+    from IPython.display import display
+
+    if png is None:
+        png = os.environ.get("CNLIVRO_PNG", "0") == "1"
+
+    pacote = {
+        "application/vnd.plotly.v1+json": fig.to_plotly_json(),
+        "text/html": fig.to_html(include_plotlyjs="cdn", full_html=False),
+    }
+    if png:
+        try:
+            pacote["image/png"] = fig.to_image(format="png", scale=escala)
+        except Exception as erro:  # kaleido/Chrome ausente: segue só com a versão web
+            print(f"[cnlivro] PNG não gerado: {erro}")
+    display(pacote, raw=True)
+
+
+def numero(valor: float, casas: int | None = None) -> str:
+    """Formata um número com vírgula decimal, para títulos e rótulos."""
+    texto = f"{valor:.{casas}f}" if casas is not None else f"{valor:g}"
+    return texto.replace(".", ",")
+
+
+def reta_de_ordem(x_min: float, x_max: float, y_ref: float, ordem: float, estilo_traco: str = "dash"):
+    """Traço de referência com inclinação ``ordem`` num gráfico log-log.
+
+    A reta passa por ``(x_max, y_ref)``.
+    """
+    x = [x_min, x_max]
+    y = [y_ref * (x_min / x_max) ** ordem, y_ref]
+    return go.Scatter(
+        x=x,
+        y=y,
+        mode="lines",
+        line=dict(color=CORES["referencia"], dash=estilo_traco, width=1.5),
+        showlegend=False,
+        hoverinfo="skip",
+    )
+
+
+def grafico_convergencia(
+    h,
+    erro,
+    ordens=(1, 2),
+    nome: str = "erro medido",
+    titulo: str = "Erro em função do passo",
+    rotulo_x: str = "passo h",
+    rotulo_y: str = "erro absoluto",
+    deslocamento: float = 4.0,
+) -> go.Figure:
+    """Gráfico log-log do erro em função do passo, com as retas de ordem teórica.
+
+    É o gráfico central da verificação de um método: se os pontos ficam
+    paralelos à reta de ordem *p*, o método se comporta como a teoria prevê.
+    As retas de referência ficam um pouco acima da curva (fator
+    ``deslocamento``) para não a esconderem, e são rotuladas na ponta.
+    """
+    import numpy as np
+
+    h = np.asarray(h, dtype=float)
+    erro = np.asarray(erro, dtype=float)
+    i_max = int(np.argmax(h))
+    tracos = ["dash", "dot", "dashdot"]
+
+    fig = go.Figure()
+    for j, p in enumerate(ordens):
+        reta = reta_de_ordem(h.min(), h.max(), erro[i_max] * deslocamento, p, tracos[j % 3])
+        fig.add_trace(reta)
+        fig.add_annotation(
+            x=np.log10(h.min()), y=np.log10(reta.y[0]), text=f"ordem {p:g}",
+            showarrow=False, xanchor="right", xshift=-4,
+            font=dict(color=CORES["referencia"], size=12),
+        )
+    fig.add_trace(
+        go.Scatter(
+            x=h,
+            y=erro,
+            mode="lines+markers",
+            name=nome,
+            line=dict(color=CORES["erro"]),
+            hovertemplate="h = %{x:.3e}<br>erro = %{y:.3e}<extra></extra>",
+        )
+    )
+    fig.update_xaxes(type="log", title=rotulo_x)
+    fig.update_yaxes(type="log", title=rotulo_y)
+    fig.update_layout(title=titulo, margin=dict(l=110))
+    return fig
+
+
+def grafico_iteracoes(resultados: dict, titulo: str = "Erro em cada iteração") -> go.Figure:
+    """Compara o erro aproximado por iteração de vários métodos (escala log em y).
+
+    ``resultados`` é um dicionário ``{nome do método: Resultado}``, com os
+    objetos devolvidos pelas funções de :mod:`cnlivro.raizes`.
+    """
+    fig = go.Figure()
+    for nome, r in resultados.items():
+        erros = [e for e in r.erros if e > 0]
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(1, len(erros) + 1)),
+                y=erros,
+                mode="lines+markers",
+                name=nome,
+                hovertemplate="iteração %{x}<br>erro = %{y:.2e}<extra></extra>",
+            )
+        )
+    fig.update_xaxes(title="iteração")
+    fig.update_yaxes(type="log", title="erro relativo aproximado")
+    fig.update_layout(title=titulo)
+    return fig

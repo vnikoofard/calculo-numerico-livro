@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cnlivro"
+version = "0.1.0"
+description = "Funções de apoio e estilo gráfico do livro Cálculo Numérico na era dos agentes"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Vahid Nikoofard" }]
+dependencies = ["numpy", "plotly>=5"]
+
+[project.optional-dependencies]
+livro = ["scipy", "ipywidgets", "matplotlib", "sympy", "kaleido", "jupyter-book==2.1.7", "ipykernel", "jupyter-server"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

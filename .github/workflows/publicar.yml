@@ -1,0 +1,50 @@
+# Publica o livro no GitHub Pages a cada push na branch main.
+# Requisito (uma vez só): Settings → Pages → Source = "GitHub Actions".
+name: Publicar livro
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  # O site fica em https://vnikoofard.github.io/calculo-numerico-livro
+  BASE_URL: /${{ github.event.repository.name }}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+      - name: Construir o site (executando os notebooks)
+        run: jupyter book build --html --execute
+      - name: Incluir o pacote cnlivro no site (usado pelo JupyterLite)
+        run: pip wheel . --no-deps -w _build/html/pacote
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_build/html
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
