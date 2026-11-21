@@ -54,8 +54,8 @@ project:
         - file: livro/12-edo-valor-inicial.ipynb
         - file: livro/13-estabilidade-rigidez.ipynb
         - file: livro/14-problemas-de-contorno.ipynb
-        - file: livro/15-edp-diferencas-finitas.md
-        - file: livro/16-metodo-das-linhas.md
+        - file: livro/15-edp-diferencas-finitas.ipynb
+        - file: livro/16-metodo-das-linhas.ipynb
     - title: Apêndices
       children:
         - file: livro/A-incerteza.md
