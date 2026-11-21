@@ -11,7 +11,7 @@ Esta página descreve a estrutura fixa de todos os capítulos. O arquivo [`model
 | 2 | A ideia em uma imagem | Intuição geométrica, sem equações | A tangente "desliza" até o eixo, iteração por iteração |
 | 3 | Formulação matemática | Deduzir o método e a análise de erro | Dedução por Taylor; convergência quadrática |
 | 4 | À mão | Duas ou três iterações no papel | f(x) = x² − 2 com x₀ = 1 |
-| 5 | Explore | Widgets para variar parâmetros | Slider para x₀; bacias de convergência |
+| 5 | Explore | Figuras com controles embutidos para variar parâmetros | Slider para x₀; bacias de convergência |
 | 6 | Trabalhando com o agente | Especificar, gerar e verificar | Pedido modelo; ordem de convergência medida; comparação com SciPy |
 | 7 | Quando falha | Casos em que o método ou o código erram | Raiz múltipla; ciclo em x³ − 2x + 2; derivada nula |
 
@@ -24,5 +24,5 @@ No fim de cada capítulo: uma tabela-resumo dos métodos, exercícios em três n
 - Gráficos de erro ficam em escala log-log, com a reta da ordem teórica (`grafico_convergencia`).
 - Eixos sempre com nome e unidade, em português e com vírgula decimal.
 - Cada figura tem uma legenda de uma frase que diz o que o leitor deve notar.
-- Todo widget tem uma versão estática equivalente (pequenos múltiplos) para o PDF.
-- A célula do widget leva a tag `skip-execution`, para que o site não mostre um aviso de kernel ausente no lugar do controle.
+- Interatividade com `com_controle(quadros, rotulo=...)`: sliders do Plotly que funcionam no site sem Python. No PDF aparece o quadro inicial. Não use `ipywidgets`.
+- Quando ajudar, acrescente uma versão estática (pequenos múltiplos) para o PDF.
