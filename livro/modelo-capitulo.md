@@ -25,3 +25,4 @@ No fim de cada capítulo: uma tabela-resumo dos métodos, exercícios em três n
 - Eixos sempre com nome e unidade, em português e com vírgula decimal.
 - Cada figura tem uma legenda de uma frase que diz o que o leitor deve notar.
 - Todo widget tem uma versão estática equivalente (pequenos múltiplos) para o PDF.
+- A célula do widget leva a tag `skip-execution`, para que o site não mostre um aviso de kernel ausente no lugar do controle.
