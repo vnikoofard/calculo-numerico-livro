@@ -24,11 +24,11 @@ project:
   toc:
     - file: livro/index.md
     - file: livro/demonstracao.ipynb
-    - file: livro/00-como-usar.md
+    - file: livro/00-como-usar.ipynb
     - title: Parte I — Fundamentos
       children:
-        - file: livro/01-modelagem.md
-        - file: livro/02-erros.md
+        - file: livro/01-modelagem.ipynb
+        - file: livro/02-erros.ipynb
     - title: Parte II — Equações e sistemas
       children:
         - file: livro/03-raizes.ipynb
