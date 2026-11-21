@@ -28,8 +28,7 @@ project:
       output: exports/calculo-numerico.pdf
   toc:
     - file: livro/index.md
-    - file: livro/demonstracao.ipynb
-    - file: livro/00-como-usar.ipynb
+    - file: livro/00-como-usar.md
     - title: Parte I — Fundamentos
       children:
         - file: livro/01-modelagem.ipynb
@@ -44,18 +43,18 @@ project:
         - file: livro/06-interpolacao.ipynb
         - file: livro/07-minimos-quadrados.ipynb
         - file: livro/08-autovalores-svd.ipynb
-        - file: livro/09-aprendizado-de-maquina.md
+        - file: livro/09-aprendizado-de-maquina.ipynb
     - title: Parte IV — Cálculo
       children:
-        - file: livro/10-derivacao.md
-        - file: livro/11-integracao.md
+        - file: livro/10-derivacao.ipynb
+        - file: livro/11-integracao.ipynb
     - title: Parte V — Equações diferenciais
       children:
-        - file: livro/12-edo-valor-inicial.md
-        - file: livro/13-estabilidade-rigidez.md
-        - file: livro/14-problemas-de-contorno.md
-        - file: livro/15-edp-diferencas-finitas.md
-        - file: livro/16-metodo-das-linhas.md
+        - file: livro/12-edo-valor-inicial.ipynb
+        - file: livro/13-estabilidade-rigidez.ipynb
+        - file: livro/14-problemas-de-contorno.ipynb
+        - file: livro/15-edp-diferencas-finitas.ipynb
+        - file: livro/16-metodo-das-linhas.ipynb
     - title: Apêndices
       children:
         - file: livro/A-incerteza.md
@@ -73,5 +72,7 @@ site:
     - title: Baixar PDF
       url: https://vnikoofard.github.io/calculo-numerico-livro/calculo-numerico.pdf
   options:
+    # Texto no canto superior esquerdo (sem ele, o tema mostra "Made with MyST")
+    logo_text: Cálculo Numérico na era dos agentes
     folders: true
     hide_footer_links: false
