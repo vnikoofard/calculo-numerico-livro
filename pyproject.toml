@@ -12,7 +12,7 @@ authors = [{ name = "Vahid Nikoofard" }]
 dependencies = ["numpy", "plotly>=5"]
 
 [project.optional-dependencies]
-livro = ["scipy", "ipywidgets", "matplotlib", "sympy", "kaleido", "jupyter-book==2.1.7", "ipykernel", "jupyter-server"]
+livro = ["scipy", "matplotlib", "sympy", "kaleido", "jupyter-book==2.1.7", "ipykernel", "jupyter-server"]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]
