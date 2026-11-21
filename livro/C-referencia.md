@@ -90,7 +90,7 @@ Um método que não converge **não** lança erro: ele devolve `convergiu=False`
 
 | Função | O que faz | Equivalente de produção |
 | --- | --- | --- |
-| `substituicao_regressiva(U, b)`, `substituicao_progressiva(L, b)` | sistemas triangulares | `scipy.linalg.solve_triangular` |
+| `substituicao_regressiva(U, b)`, `substituicao_progressiva(L, b)` | sistemas triangulares | `solve_triangular` (`scipy.linalg`) |
 | `lu(A)` | LU com pivotamento parcial, $PA = LU$ | `scipy.linalg.lu_factor` (ou `scipy.linalg.lu`, que devolve $A = PLU$: o $P$ é o transposto) |
 | `resolve_lu(P, L, U, b)` | resolve a partir da fatoração | `scipy.linalg.lu_solve` |
 | `eliminacao_gauss(A, b, pivotamento=True)` | eliminação de Gauss | `np.linalg.solve` |
@@ -105,16 +105,16 @@ Um método que não converge **não** lança erro: ele devolve `convergiu=False`
 | `newton_sistema(F, J, x0)` | Newton para $\mathbf F(\mathbf x) = \mathbf 0$ | `scipy.optimize.root` |
 | `busca_armijo(f, x, fx, g, d)` | busca linear com retrocesso | `scipy.optimize.line_search` (condições de Wolfe) |
 | `gradiente_descendente(f, grad, x0)` | descida pelo gradiente | `torch.optim.SGD` |
-| `bfgs(f, grad, x0)` | quase-Newton BFGS | `scipy.optimize.minimize(method="BFGS")` |
+| `bfgs(f, grad, x0)` | quase-Newton BFGS | `minimize(method="BFGS")` (`scipy.optimize`) |
 | `rosenbrock(x)`, `grad_rosenbrock(x)` | função de teste de Rosenbrock | `scipy.optimize.rosen`, `rosen_der` |
 
 ### Interpolação: `cnlivro.interpolacao` (capítulo [6](./06-interpolacao.ipynb))
 
 | Função | O que faz | Equivalente de produção |
 | --- | --- | --- |
-| `diferencas_divididas(x, y)`, `newton_avalia(coef, x_nos, t)` | forma de Newton do polinômio interpolador | `scipy.interpolate.KroghInterpolator` |
-| `lagrange(x_nos, y_nos, t)` | fórmula baricêntrica | `scipy.interpolate.BarycentricInterpolator` |
-| `nos_chebyshev(n, a, b)` | nós de Chebyshev em $[a, b]$ | `numpy.polynomial.chebyshev.chebpts1` (em $[-1, 1]$) |
+| `diferencas_divididas(x, y)`, `newton_avalia(coef, x_nos, t)` | forma de Newton do polinômio interpolador | `KroghInterpolator` (`scipy.interpolate`) |
+| `lagrange(x_nos, y_nos, t)` | fórmula baricêntrica | `BarycentricInterpolator` (`scipy.interpolate`) |
+| `nos_chebyshev(n, a, b)` | nós de Chebyshev em $[a, b]$ | `chebpts1` (`numpy.polynomial.chebyshev`), em $[-1, 1]$ |
 | `spline_cubica_natural(x, y)` | spline cúbica natural | `scipy.interpolate.CubicSpline(x, y, bc_type="natural")` |
 
 ### Mínimos quadrados: `cnlivro.ajuste` (capítulo [7](./07-minimos-quadrados.ipynb))
@@ -138,16 +138,16 @@ Um método que não converge **não** lança erro: ele devolve `convergiu=False`
 | Função | O que faz | Equivalente de produção |
 | --- | --- | --- |
 | `mlp(entradas, saidas, largura, camadas)` | rede totalmente conectada em PyTorch | `torch.nn.Sequential` |
-| `Padronizador(dados)` | média 0 e desvio 1 por coluna, e a volta | `sklearn.preprocessing.StandardScaler` |
+| `Padronizador(dados)` | média 0 e desvio 1 por coluna, e a volta | `StandardScaler` (`sklearn.preprocessing`) |
 | `treinar(modelo, x, y, ...)` | treino por erro quadrático médio com Adam, com validação | laço com `torch.optim.Adam`; bibliotecas como PyTorch Lightning |
 
 ### Derivação: `cnlivro.derivacao` (capítulo [10](./10-derivacao.ipynb))
 
 | Função | O que faz | Equivalente de produção |
 | --- | --- | --- |
-| `progressiva`, `regressiva`, `centrada`, `segunda_centrada` | fórmulas de diferenças finitas | `scipy.differentiate.derivative` (passo escolhido automaticamente) |
+| `progressiva`, `regressiva`, `centrada`, `segunda_centrada` | fórmulas de diferenças finitas | `derivative` (`scipy.differentiate`), com passo escolhido automaticamente |
 | `passo_complexo(f, x)` | derivada pelo passo complexo | — |
-| `richardson(f, x, h, niveis)` | extrapolação de Richardson | `scipy.differentiate.derivative` |
+| `richardson(f, x, h, niveis)` | extrapolação de Richardson | `derivative` (`scipy.differentiate`) |
 | `derivada_dados(x, y)` | derivada de dados com espaçamento qualquer | `np.gradient(y, x, edge_order=2)` |
 | — | derivada exata de código | diferenciação automática: `torch.autograd`, `torch.func.grad` |
 
@@ -157,7 +157,7 @@ Um método que não converge **não** lança erro: ele devolve `convergiu=False`
 | --- | --- | --- |
 | `trapezio(f, a, b, n)`, `simpson(f, a, b, n)` | regras compostas com $n$ subintervalos | `scipy.integrate.trapezoid`, `scipy.integrate.simpson` (sobre amostras) |
 | `trapezio_dados(x, y)` | trapézio para dados | `np.trapezoid` |
-| `gauss_legendre(f, a, b, n)` | Gauss-Legendre com $n$ pontos | `scipy.integrate.fixed_quad`; nós em `np.polynomial.legendre.leggauss` |
+| `gauss_legendre(f, a, b, n)` | Gauss-Legendre com $n$ pontos | `scipy.integrate.fixed_quad`; nós em `leggauss` (`np.polynomial.legendre`) |
 | `romberg(f, a, b, tol)`, `simpson_adaptativo(f, a, b, tol)` | integração com controle do erro | `scipy.integrate.quad` |
 | `monte_carlo(f, limites, n)` | Monte Carlo numa caixa, com erro padrão | `scipy.integrate.qmc_quad` (quase Monte Carlo) |
 
@@ -172,7 +172,7 @@ Um método que não converge **não** lança erro: ele devolve `convergiu=False`
 | `verlet(aceleracao, t_span, q0, v0, h)` | Verlet de velocidade (simplético) | não há no SciPy; integradores simpléticos estão em bibliotecas de dinâmica |
 | `tiro(f, x_span, ya, residuo, s0, s1)` | método do tiro | `scipy.optimize.root_scalar` com `solve_ivp` |
 | `contorno_dif_finitas(f, x_span, ya, direita, n)` | diferenças finitas com Newton | `scipy.integrate.solve_bvp` |
-| `autoestados(V, x_span, n, k)` | níveis de energia da equação de Schrödinger 1D | `scipy.linalg.eigh_tridiagonal` |
+| `autoestados(V, x_span, n, k)` | níveis de energia da equação de Schrödinger 1D | `eigh_tridiagonal` (`scipy.linalg`) |
 
 ### Equações diferenciais parciais: `cnlivro.edp` (capítulos [15](./15-edp-diferencas-finitas.ipynb) e [16](./16-metodo-das-linhas.ipynb))
 
@@ -193,7 +193,7 @@ Um método que não converge **não** lança erro: ele devolve `convergiu=False`
 | `monte_carlo(modelo, entradas)` | avalia o modelo em todas as amostras; média, desvio e erro padrão | NumPy e `scipy.stats` (amostragem: `scipy.stats.qmc`) |
 | `probabilidade(eventos, confianca)` | probabilidade de um evento com o intervalo de Wilson | `scipy.stats.binomtest(k, n).proportion_ci(method="wilson")` |
 | `propagacao_linear(f, x0, sigmas)` | método delta, com derivadas por diferenças | pacote `uncertainties` |
-| `gradiente_torch(f, x0)` | gradiente por diferenciação automática | `torch.func.grad`, `torch.autograd.functional.jacobian` |
+| `gradiente_torch(f, x0)` | gradiente por diferenciação automática | `torch.func.grad`, `jacobian` (`torch.autograd.functional`) |
 | — | análise de sensibilidade global (índices de Sobol) | SALib |
 
 ### Desempenho: `cnlivro.desempenho` (apêndice [B](./B-desempenho-gpu.ipynb))
