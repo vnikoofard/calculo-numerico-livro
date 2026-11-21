@@ -118,10 +118,71 @@ def mostrar(fig: go.Figure, png: bool | None = None, escala: float = 2.0) -> Non
     }
     if png:
         try:
-            pacote["image/png"] = fig.to_image(format="png", scale=escala)
+            # No PDF, controles (sliders e botões) não fazem sentido: a imagem
+            # mostra só o estado inicial da figura.
+            estatica = go.Figure(fig)
+            if fig.layout.sliders and fig.layout.height:
+                estatica.update_layout(height=fig.layout.height - 90)  # espaço do slider
+            estatica.layout.sliders = ()
+            estatica.layout.updatemenus = ()
+            pacote["image/png"] = estatica.to_image(format="png", scale=escala)
         except Exception as erro:  # kaleido/Chrome ausente: segue só com a versão web
             print(f"[cnlivro] PNG não gerado: {erro}")
     display(pacote, raw=True)
+
+
+def com_controle(
+    quadros,
+    rotulo: str = "",
+    ativo: int = 0,
+    titulos=None,
+) -> go.Figure:
+    """Junta várias figuras numa só, com um slider para escolher qual mostrar.
+
+    O controle é JavaScript puro do Plotly: funciona no site estático, sem
+    Python rodando. No PDF, :func:`mostrar` desenha só o quadro ``ativo``.
+
+    Parameters
+    ----------
+    quadros:
+        Lista de pares ``(rótulo do passo, figura)``. Todas as figuras devem
+        ter a mesma estrutura de eixos; o layout vem da primeira.
+    rotulo:
+        Texto mostrado antes do valor atual do slider (ex.: ``"x₀ = "``).
+    ativo:
+        Índice do quadro mostrado inicialmente.
+    titulos:
+        Lista opcional com o título da figura em cada quadro.
+    """
+    import copy
+
+    fig = go.Figure(layout=copy.deepcopy(quadros[0][1].layout))
+    faixas = []
+    for i, (_, f) in enumerate(quadros):
+        inicio = len(fig.data)
+        for tr in f.data:
+            tr = copy.deepcopy(tr)
+            tr.visible = i == ativo
+            fig.add_trace(tr)
+        faixas.append((inicio, len(fig.data)))
+
+    passos = []
+    for i, (nome, _) in enumerate(quadros):
+        visivel = [faixas[i][0] <= j < faixas[i][1] for j in range(len(fig.data))]
+        args = [{"visible": visivel}]
+        if titulos:
+            args.append({"title.text": titulos[i]})
+        passos.append(dict(method="update", label=nome, args=args))
+
+    altura = (fig.layout.height or ALTURA_PADRAO) + 90
+    fig.update_layout(
+        sliders=[dict(active=ativo, steps=passos, currentvalue=dict(prefix=rotulo, font=dict(size=14)),
+                      pad=dict(t=50, b=10), len=0.9, x=0.05)],
+        height=altura,
+    )
+    if titulos:
+        fig.update_layout(title=titulos[ativo])
+    return fig
 
 
 def numero(valor: float, casas: int | None = None) -> str:
