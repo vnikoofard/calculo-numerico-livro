@@ -2,6 +2,12 @@
   <img src=".github/assets/capa-livia-uerj-fat.png" alt="LIVIA, Universidade do Estado do Rio de Janeiro (UERJ) e Faculdade de Tecnologia (FAT), UERJ-Resende" width="100%">
 </p>
 
+<p align="center">
+  <a href="https://vnikoofard.github.io/calculo-numerico-livro/"><b>📖 Ler o livro no site</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://vnikoofard.github.io/calculo-numerico-livro/calculo-numerico.pdf"><b>📄 Baixar o PDF</b></a>
+</p>
+
 # Cálculo Numérico na era dos agentes
 
 *Métodos numéricos para engenharia, com Python e agentes de IA*
