@@ -1,0 +1,31 @@
+# Modelo LaTeX próprio do livro (usado pelo export em PDF do myst.yml).
+# Baseado na estrutura do modelo "plain_latex_book" do MyST, com:
+#   - código Python com realce de sintaxe (minted) e quebra de linhas longas;
+#   - saídas das células num quadro cinza, com o rótulo "saída";
+#   - fontes com acentos, grau, letras gregas e índices (XeLaTeX + DejaVu Sans Mono);
+#   - português (babel) e cabeçalho com o título do capítulo.
+myst: v1
+kind: tex
+title: Cálculo Numérico (livro)
+description: Modelo LaTeX do livro Cálculo Numérico na era dos agentes
+version: 1.0.0
+build:
+  engine: -xelatex
+packages:
+  - fontspec
+  - babel
+  - geometry
+  - xcolor
+  - graphicx
+  - amsmath
+  - amssymb
+  - hyperref
+  - url
+  - minted
+  - fancyhdr
+  - newunicodechar
+  - booktabs
+  - enumitem
+  - longtable
+  - framed
+  - caption

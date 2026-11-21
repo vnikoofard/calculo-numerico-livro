@@ -1,0 +1,149 @@
+%% Modelo LaTeX do livro "Cálculo Numérico na era dos agentes" (XeLaTeX).
+%% Variáveis do MyST: doc.title, IMPORTS, CONTENT (entre colchetes e hífens).
+\documentclass[11pt,a4paper,openany]{book}
+
+% ---- idioma e fontes -------------------------------------------------------
+\usepackage{fontspec}
+\usepackage[brazil]{babel}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+% DejaVu Sans Mono tem acentos, grau, letras gregas, setas e índices (₀, ⁻¹...)
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+\newfontfamily\fontereserva{DejaVu Serif}[Scale=MatchLowercase]
+\newfontfamily\fontereservasans{DejaVu Sans}[Scale=MatchLowercase]
+
+% Caracteres que a Latin Modern não tem: no texto, vêm da DejaVu Serif; no
+% código, a fonte monoespaçada já os tem.
+\usepackage{newunicodechar}
+\makeatletter
+\newcommand{\cnreserva}[1]{%
+  \edef\cn@familia{\ttdefault}%
+  \ifx\cn@familia\f@family #1\else{\fontereserva #1}\fi}
+\makeatother
+\newcommand{\cnchar}[2]{\newunicodechar{#1}{\cnreserva{\symbol{"#2}}}}
+% grego
+\cnchar{α}{03B1}\cnchar{β}{03B2}\cnchar{γ}{03B3}\cnchar{δ}{03B4}\cnchar{ε}{03B5}
+\cnchar{ζ}{03B6}\cnchar{η}{03B7}\cnchar{θ}{03B8}\cnchar{κ}{03BA}\cnchar{λ}{03BB}
+\cnchar{μ}{03BC}\cnchar{ν}{03BD}\cnchar{ξ}{03BE}\cnchar{π}{03C0}\cnchar{ρ}{03C1}
+\cnchar{σ}{03C3}\cnchar{τ}{03C4}\cnchar{φ}{03C6}\cnchar{χ}{03C7}\cnchar{ψ}{03C8}
+\cnchar{ω}{03C9}\cnchar{Δ}{0394}\cnchar{Σ}{03A3}\cnchar{Φ}{03A6}\cnchar{Ω}{03A9}
+\cnchar{Λ}{039B}\cnchar{Γ}{0393}\cnchar{Θ}{0398}\cnchar{Π}{03A0}
+% índices e expoentes
+\cnchar{₀}{2080}\cnchar{₁}{2081}\cnchar{₂}{2082}\cnchar{₃}{2083}\cnchar{₄}{2084}
+\cnchar{₅}{2085}\cnchar{₆}{2086}\cnchar{₇}{2087}\cnchar{₈}{2088}\cnchar{₉}{2089}
+\cnchar{⁰}{2070}\cnchar{⁴}{2074}\cnchar{⁵}{2075}\cnchar{⁶}{2076}\cnchar{⁷}{2077}
+\cnchar{⁸}{2078}\cnchar{⁹}{2079}\cnchar{⁻}{207B}\cnchar{⁺}{207A}\cnchar{ᵀ}{1D40}
+\cnchar{ₖ}{2096}\cnchar{ₙ}{2099}\cnchar{ᵢ}{1D62}
+% símbolos
+\cnchar{→}{2192}\cnchar{←}{2190}\cnchar{↔}{2194}\cnchar{⇒}{21D2}\cnchar{≈}{2248}
+\cnchar{≤}{2264}\cnchar{≥}{2265}\cnchar{≠}{2260}\cnchar{∞}{221E}\cnchar{∝}{221D}
+\cnchar{∂}{2202}\cnchar{∇}{2207}\cnchar{‖}{2016}\cnchar{−}{2212}\cnchar{√}{221A}
+\cnchar{∑}{2211}\cnchar{∫}{222B}\cnchar{⟂}{27C2}\cnchar{⊥}{22A5}\cnchar{✓}{2713}
+% marcas de certo/errado (a DejaVu Serif não as tem; a Sans tem)
+\newcommand{\cnmarca}[1]{{\fontereservasans\symbol{"#1}}}
+\newunicodechar{✔}{\cnmarca{2714}}\newunicodechar{✘}{\cnmarca{2718}}
+\newunicodechar{✗}{\cnmarca{2717}}\newunicodechar{✅}{\cnmarca{2714}}
+\newunicodechar{❌}{\cnmarca{2718}}
+
+% O MyST troca as setas do texto (→) por \rightarrow sem entrar em modo
+% matemático; \ensuremath faz funcionar nos dois modos.
+\makeatletter
+\@for\cn@seta:=rightarrow,leftarrow,leftrightarrow,Rightarrow,Leftarrow,Leftrightarrow\do{%
+  \expandafter\let\csname cn@orig@\cn@seta\expandafter\endcsname\csname\cn@seta\endcsname
+  \expandafter\edef\csname\cn@seta\endcsname{\noexpand\ensuremath{\expandafter\noexpand\csname cn@orig@\cn@seta\endcsname}}}
+\makeatother
+
+% ---- página ----------------------------------------------------------------
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,inner=2.5cm,outer=2.2cm,headheight=14pt]{geometry}
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=cnazul,urlcolor=cnazul,citecolor=cnazul]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setcounter{secnumdepth}{-1}  % os títulos já trazem a numeração do livro (1., 3.2, ...)
+\setcounter{tocdepth}{0}
+
+% Cores do livro (as mesmas de cnlivro.estilo.CORES)
+\definecolor{cnazul}{HTML}{0072B2}
+\definecolor{cncinza}{HTML}{999999}
+\definecolor{cnfundo}{HTML}{F4F6F8}
+
+% Cabeçalho: título do capítulo nas duas páginas, sem caixa alta
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\small\itshape\nouppercase{\leftmark}}
+\fancyhead[LO]{\small\itshape\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\renewcommand{\sectionmark}[1]{}
+% ---- níveis de título -------------------------------------------------------
+% O MyST escreve as partes do sumário como \section no arquivo principal, e cada
+% capítulo, num arquivo incluído, como \section (fora de uma parte) ou como
+% \subsection (dentro de uma parte); os títulos internos vêm logo abaixo.
+% Aqui o primeiro título de cada arquivo incluído vira \chapter, os seguintes
+% descem um nível de cada vez, e as partes viram \part.
+\makeatletter
+\let\cnLchapter\chapter \let\cnLsection\section \let\cnLsubsection\subsection
+\let\cnLsubsubsection\subsubsection \let\cnLparagraph\paragraph
+\newif\ifcn@incluido
+\newcount\cn@base
+\AddToHook{include/before}{\global\cn@incluidotrue\global\cn@base=0\relax}
+\AddToHook{include/after}{\global\cn@incluidofalse}
+\newcommand{\cn@titulo}[2]{%
+  \ifcn@incluido
+    \ifnum\cn@base=0 \global\cn@base=#1\relax\fi
+    \ifcase\numexpr#1-\cn@base\relax
+      \cnLchapter{#2}%
+    \or \cnLsection{#2}%
+    \or \cnLsubsection{#2}%
+    \or \cnLsubsubsection{#2}%
+    \else \cnLparagraph{#2}%
+    \fi
+  \else
+    \cleardoublepage\phantomsection\addcontentsline{toc}{part}{#2}\part*{#2}%
+  \fi}
+\renewcommand{\section}{\@ifstar{\cn@titulo{1}}{\cn@titulo{1}}}
+\renewcommand{\subsection}{\@ifstar{\cn@titulo{2}}{\cn@titulo{2}}}
+\renewcommand{\subsubsection}{\@ifstar{\cn@titulo{3}}{\cn@titulo{3}}}
+\renewcommand{\paragraph}{\@ifstar{\cn@titulo{4}}{\cn@titulo{4}}}
+\makeatother
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---- código ----------------------------------------------------------------
+% Entrada: realce de sintaxe Python, barra azul à esquerda.
+% Saída: texto cinza-escuro num quadro claro, com o rótulo "saída".
+% As duas quebram linhas longas em vez de sair da página.
+\usepackage[newfloat]{minted}
+\setminted{breaklines=true,breakanywhere=true,fontsize=\small,tabsize=4,
+  breaksymbolleft={\tiny\color{cncinza}\ensuremath{\hookrightarrow}}}
+\setminted[python]{style=friendly,frame=leftline,framerule=2pt,rulecolor=\color{cnazul},
+  framesep=3mm,xleftmargin=1mm}
+\setminted[text]{fontsize=\footnotesize,frame=lines,framerule=0.4pt,rulecolor=\color{cncinza},
+  framesep=2mm,xleftmargin=4mm,formatcom=\color{black!75},
+  label={\scriptsize\sffamily\color{cncinza}saída},labelposition=topline}
+\setminted[ipython3]{style=friendly,frame=leftline,framerule=2pt,rulecolor=\color{cnazul},
+  framesep=3mm,xleftmargin=1mm}
+
+[-IMPORTS-]
+
+\title{[-doc.title-][# if doc.subtitle #]\\[1ex]\large [-doc.subtitle-][# endif #]}
+\author{[# for author in doc.authors #][-author.name-][# if not loop.last #] \and [# endif #][# endfor #]}
+\date{}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+\mainmatter
+
+[-CONTENT-]
+
+\end{document}
