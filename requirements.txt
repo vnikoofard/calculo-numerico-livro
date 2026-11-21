@@ -1,0 +1,2 @@
+# Dependências para executar e construir o livro
+-e .[livro,dev]

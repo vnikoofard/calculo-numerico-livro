@@ -1,0 +1,40 @@
+# Gera a versão em PDF do livro. As figuras interativas viram imagens estáticas
+# (CNLIVRO_PNG=1 faz cnlivro.estilo.mostrar() incluir um PNG de cada figura).
+# O PDF fica disponível como artefato da execução (aba Actions).
+name: PDF do livro
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    env:
+      CNLIVRO_PNG: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: Instalar LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends latexmk texlive-xetex \
+            texlive-latex-extra texlive-fonts-recommended texlive-lang-portuguese
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+      - name: Construir o PDF
+        run: |
+          export BROWSER_PATH="$(which google-chrome || which chromium || true)"
+          jupyter book build --pdf --execute
+      - uses: actions/upload-artifact@v4
+        with:
+          name: livro-pdf
+          path: exports/*.pdf
