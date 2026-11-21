@@ -15,9 +15,10 @@ derivacao    diferenças finitas, Richardson, passo complexo, derivada de dados 
 integracao   trapézio, Simpson, Gauss-Legendre, Romberg, Simpson adaptativo, Monte Carlo (cap. 11)
 edo          Euler, RK4, RK45 adaptativo, implícitos, Verlet, tiro, diferenças finitas, Schrödinger (caps. 12-14)
 edp          advecção-difusão (upwind, Lax-Wendroff), calor (método θ), Poisson 2D, Burgers, laplacianos, elementos finitos 1D (caps. 15-16)
+incerteza    Monte Carlo com erro padrão, intervalo de Wilson, método delta, gradiente com PyTorch (apêndice A)
+desempenho   medição de tempo, dispositivo do PyTorch, algoritmo de Thomas (um sistema e em lote) (apêndice B)
 
-Os demais módulos (sistemas lineares, interpolação, EDOs...) serão portados do
-``cn_utils.py`` das notas antigas à medida que os capítulos forem reescritos.
+O apêndice C traz uma referência rápida de todas as funções, com os equivalentes no NumPy, no SciPy e no PyTorch.
 """
 
 __version__ = "0.1.0"

@@ -58,8 +58,8 @@ project:
         - file: livro/16-metodo-das-linhas.ipynb
     - title: Apêndices
       children:
-        - file: livro/A-incerteza.md
-        - file: livro/B-desempenho-gpu.md
+        - file: livro/A-incerteza.ipynb
+        - file: livro/B-desempenho-gpu.ipynb
         - file: livro/C-referencia.md
     - title: Para autores
       children:
