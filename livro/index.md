@@ -22,7 +22,7 @@ Todos os capítulos seguem as mesmas sete seções:
 - **No navegador:** cada página tem um botão para executar o código ali mesmo, sem instalar nada.
 - **No Colab:** cada capítulo tem um link para abrir o notebook no Google Colab.
 - **No seu computador:** clone o repositório e instale as dependências com `pip install -r requirements.txt`.
-- **Em PDF:** a versão impressa traz as mesmas figuras, em forma estática.
+- **Em PDF:** [baixe o livro em PDF](https://vnikoofard.github.io/calculo-numerico-livro/calculo-numerico.pdf). A versão impressa traz as mesmas figuras, em forma estática, e é atualizada a cada nova versão do site. O botão **Baixar PDF**, no topo de todas as páginas, leva ao mesmo arquivo.
 
 Comece pela página [Demonstração dos padrões](./demonstracao.ipynb), que mostra os gráficos e os controles interativos usados no livro.
 

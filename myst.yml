@@ -62,6 +62,11 @@ project:
 
 site:
   template: book-theme
+  # Botão no topo de todas as páginas. O PDF é gerado e publicado junto com o site
+  # pelo workflow .github/workflows/publicar.yml.
+  actions:
+    - title: Baixar PDF
+      url: https://vnikoofard.github.io/calculo-numerico-livro/calculo-numerico.pdf
   options:
     folders: true
     hide_footer_links: false
