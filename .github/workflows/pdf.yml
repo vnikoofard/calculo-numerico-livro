@@ -1,11 +1,10 @@
 # Gera a versão em PDF do livro. As figuras interativas viram imagens estáticas
 # (CNLIVRO_PNG=1 faz cnlivro.estilo.mostrar() incluir um PNG de cada figura).
-# O PDF fica disponível como artefato da execução (aba Actions).
+# Este workflow confere o PDF nos PRs. No main, o PDF é gerado e publicado no site
+# pelo workflow publicar.yml.
 name: PDF do livro
 
 on:
-  push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 
