@@ -13,6 +13,7 @@ autovalores  método da potência (direto e inverso), prédio de cisalhamento (c
 redes        rede totalmente conectada, padronizador e laço de treino em PyTorch (cap. 9)
 derivacao    diferenças finitas, Richardson, passo complexo, derivada de dados (cap. 10)
 integracao   trapézio, Simpson, Gauss-Legendre, Romberg, Simpson adaptativo, Monte Carlo (cap. 11)
+edo          Euler, RK4, RK45 adaptativo, implícitos, Verlet, tiro, diferenças finitas, Schrödinger (caps. 12-14)
 
 Os demais módulos (sistemas lineares, interpolação, EDOs...) serão portados do
 ``cn_utils.py`` das notas antigas à medida que os capítulos forem reescritos.

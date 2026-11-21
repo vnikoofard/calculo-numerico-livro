@@ -51,9 +51,9 @@ project:
         - file: livro/11-integracao.ipynb
     - title: Parte V — Equações diferenciais
       children:
-        - file: livro/12-edo-valor-inicial.md
-        - file: livro/13-estabilidade-rigidez.md
-        - file: livro/14-problemas-de-contorno.md
+        - file: livro/12-edo-valor-inicial.ipynb
+        - file: livro/13-estabilidade-rigidez.ipynb
+        - file: livro/14-problemas-de-contorno.ipynb
         - file: livro/15-edp-diferencas-finitas.md
         - file: livro/16-metodo-das-linhas.md
     - title: Apêndices
