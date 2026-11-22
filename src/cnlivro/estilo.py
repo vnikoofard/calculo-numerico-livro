@@ -52,6 +52,14 @@ FONTE = "Inter, 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif"
 LARGURA_PADRAO = 720
 ALTURA_PADRAO = 420
 
+# Configuração das figuras no site: ``responsive`` faz o Plotly redesenhar a
+# figura quando a largura da página muda (janela redimensionada, celular).
+CONFIG_WEB = {"responsive": True, "displaylogo": False}
+
+# Figuras mais largas que LARGURA_PADRAO não encolhem abaixo desta fração da
+# largura original (ver mostrar()).
+FRACAO_MINIMA = 0.6
+
 
 def _template() -> go.layout.Template:
     eixo = dict(
@@ -76,7 +84,8 @@ def _template() -> go.layout.Template:
             yaxis=eixo,
             legend=dict(bgcolor="rgba(255,255,255,0.8)", borderwidth=0),
             margin=dict(l=70, r=20, t=50, b=60),
-            width=LARGURA_PADRAO,
+            # Sem largura fixa no tema: no site a figura acompanha a largura da
+            # página. A imagem do PDF usa LARGURA_PADRAO (ver mostrar()).
             height=ALTURA_PADRAO,
             hoverlabel=dict(font_family=FONTE),
             # Vírgula como separador decimal e ponto como separador de milhar.
@@ -112,9 +121,32 @@ def mostrar(fig: go.Figure, png: bool | None = None, escala: float = 2.0) -> Non
     if png is None:
         png = os.environ.get("CNLIVRO_PNG", "0") == "1"
 
+    # Na web a figura ocupa a largura disponível da página (e se ajusta quando a
+    # janela muda de tamanho), em vez de usar a largura fixa em pixels do tema
+    # ou do capítulo. Isso evita a barra de rolagem horizontal em telas
+    # estreitas. A largura fixa continua valendo para a imagem do PDF.
+    web = go.Figure(fig)
+    largura_original = fig.layout.width
+    web.layout.width = None
+    web.update_layout(autosize=True)
+    html = web.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
+        config=CONFIG_WEB,
+        default_width="100%",
+    )
+    # Figuras largas (vários painéis lado a lado) ficam ilegíveis se espremidas
+    # na tela de um celular: abaixo de uma largura mínima, elas rolam na
+    # horizontal dentro do próprio quadro, sem alargar a página.
+    if largura_original and largura_original > LARGURA_PADRAO:
+        minimo = int(FRACAO_MINIMA * largura_original)
+        html = (
+            f'<div style="width:100%;overflow-x:auto">'
+            f'<div style="min-width:{minimo}px">{html}</div></div>'
+        )
     pacote = {
-        "application/vnd.plotly.v1+json": fig.to_plotly_json(),
-        "text/html": fig.to_html(include_plotlyjs="cdn", full_html=False),
+        "application/vnd.plotly.v1+json": {**web.to_plotly_json(), "config": CONFIG_WEB},
+        "text/html": html,
     }
     if png:
         try:
@@ -125,7 +157,8 @@ def mostrar(fig: go.Figure, png: bool | None = None, escala: float = 2.0) -> Non
                 estatica.update_layout(height=fig.layout.height - 90)  # espaço do slider
             estatica.layout.sliders = ()
             estatica.layout.updatemenus = ()
-            pacote["image/png"] = estatica.to_image(format="png", scale=escala)
+            largura = estatica.layout.width or LARGURA_PADRAO
+            pacote["image/png"] = estatica.to_image(format="png", width=largura, scale=escala)
         except Exception as erro:  # kaleido/Chrome ausente: segue só com a versão web
             print(f"[cnlivro] PNG não gerado: {erro}")
     display(pacote, raw=True)
