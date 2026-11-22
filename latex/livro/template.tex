@@ -64,6 +64,20 @@
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{url}
 \usepackage[colorlinks=true,linkcolor=cnazul,urlcolor=cnazul,citecolor=cnazul]{hyperref}
+% Figuras centralizadas: o MyST escreve as imagens soltas (saídas das células e
+% imagens sem legenda) como um \includegraphics no início de um parágrafo, sem
+% centralizar. Fora de um float (figure/table, que já tem \centering), toda
+% imagem que começa um parágrafo vira um parágrafo centralizado.
+\makeatletter
+\let\cn@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \ifvmode
+    \ifdefined\@captype \cn@includegraphics[ #1]{#2}%
+    \else {\centering\cn@includegraphics[ #1]{#2}\par}%
+    \fi
+  \else \cn@includegraphics[ #1]{#2}%
+  \fi}
+\makeatother
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
 \setcounter{secnumdepth}{-1}  % os títulos já trazem a numeração do livro (1., 3.2, ...)
