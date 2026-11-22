@@ -107,3 +107,39 @@ def test_predio_cisalhamento():
     M, K = predio_cisalhamento([1.0, 1.0], [2.0, 1.0])
     assert np.allclose(K, [[3, -1], [-1, 1]])
     assert np.allclose(M, np.eye(2))
+
+
+# ---- B-splines --------------------------------------------------------------
+
+def test_base_bspline_contra_scipy_e_particao_da_unidade():
+    from scipy.interpolate import BSpline
+    from cnlivro.interpolacao import base_bspline, nos_bspline
+    x = np.linspace(0, 2, 301)                          # inclui as duas pontas
+    for k in (0, 1, 2, 3):
+        t = nos_bspline(0, 2, 5, k)
+        B = base_bspline(x, t, k)
+        assert B.shape == (len(x), 5 + k)
+        assert np.allclose(B.sum(axis=1), 1)            # partição da unidade
+        assert np.all(B >= 0)
+        ref = BSpline.design_matrix(x, t, k).toarray()
+        assert np.allclose(B, ref)
+    # suporte local: B_{i,k} é zero fora de [t_i, t_{i+k+1}]
+    t = nos_bspline(0, 1, 6, 3)
+    B = base_bspline(x / 2, t, 3)
+    for i in range(B.shape[1]):
+        fora = (x / 2 < t[i]) | (x / 2 > t[i + 4])
+        assert np.all(B[fora, i] == 0)
+
+
+def test_base_bspline_em_pytorch_e_integral():
+    torch = pytest.importorskip("torch")
+    from cnlivro.interpolacao import base_bspline, nos_bspline
+    t = nos_bspline(-1, 1, 4, 3)
+    x = np.linspace(-1, 1, 41)
+    Bt = base_bspline(torch.tensor(x, dtype=torch.float64), t, 3)
+    assert isinstance(Bt, torch.Tensor)
+    assert np.allclose(Bt.numpy(), base_bspline(x, t, 3))
+    # ∫ B_{i,k} dx = (t_{i+k+1} - t_i) / (k + 1)
+    xf = np.linspace(-1, 1, 20001)
+    integrais = np.trapezoid(base_bspline(xf, t, 3), xf, axis=0)
+    assert np.allclose(integrais, (t[4:] - t[:-4]) / 4, atol=1e-6)
