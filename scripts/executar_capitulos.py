@@ -8,6 +8,11 @@ laço demorado vira várias caixas, e no PDF aparecem linhas em branco no meio
 de uma tabela. Aqui os pedaços consecutivos de ``stdout``/``stderr`` são
 juntados num só antes de gravar o notebook.
 
+Também marca a célula "Preparação do ambiente" (a primeira de cada capítulo,
+com ``import cnlivro``, ``micropip`` e ``%pip``) com a etiqueta ``remove-cell``:
+ela é útil no site e nos notebooks, mas não no livro impresso. Como este script
+só roda no build do PDF, o site continua mostrando a célula.
+
 Use só no CI (ou numa cópia): os notebooks do repositório ficam sem saídas.
 """
 
@@ -39,6 +44,21 @@ def juntar_fluxos(nb) -> int:
     return juntadas
 
 
+MARCA_PREPARACAO = "# Preparação do ambiente"
+
+
+def esconder_preparacao(nb) -> int:
+    """Tira do PDF as células de preparação do ambiente; devolve quantas foram marcadas."""
+    marcadas = 0
+    for celula in nb.cells:
+        if celula.cell_type == "code" and celula.source.lstrip().startswith(MARCA_PREPARACAO):
+            etiquetas = celula.metadata.setdefault("tags", [])
+            if "remove-cell" not in etiquetas:
+                etiquetas.append("remove-cell")
+            marcadas += 1
+    return marcadas
+
+
 def main(caminhos: list[str]) -> None:
     for caminho in map(Path, caminhos):
         inicio = time.perf_counter()
@@ -46,6 +66,8 @@ def main(caminhos: list[str]) -> None:
         NotebookClient(nb, timeout=1200, kernel_name="python3",
                        resources={"metadata": {"path": str(caminho.parent)}}).execute()
         n = juntar_fluxos(nb)
+        if esconder_preparacao(nb) == 0:
+            print(f"AVISO: {caminho} não tem a célula de preparação do ambiente")
         nbformat.write(nb, caminho)
         print(f"{caminho}: executado em {time.perf_counter() - inicio:.0f} s ({n} saídas de texto juntadas)")
 
