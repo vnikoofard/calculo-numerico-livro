@@ -86,6 +86,7 @@ A leitura de apoio continua sendo o livro *Numerical Methods for Engineers*, de 
 | `src/cnlivro/` | Pacote do livro: estilo dos gráficos, verificação e implementações de referência |
 | `tests/` | Testes do pacote |
 | `modelos/capitulo-modelo.ipynb` | Ponto de partida para escrever um capítulo |
+| `modelos/guia-do-capitulo.md` | Estrutura fixa dos capítulos e regras de estilo (referência interna, fora do livro) |
 | `latex/livro/` | Modelo LaTeX do PDF |
 | `scripts/` | Geração do PDF e de figuras |
 | `.github/workflows/` | Testes, site e PDF automáticos |

@@ -3,7 +3,9 @@ title: Modelo de capítulo (para autores)
 label: modelo-capitulo
 ---
 
-Esta página descreve a estrutura fixa de todos os capítulos. O arquivo [`modelos/capitulo-modelo.ipynb`](https://github.com/vnikoofard/calculo-numerico-livro/blob/main/modelos/capitulo-modelo.ipynb) é o ponto de partida para escrever um capítulo novo.
+<!-- Referência interna para autores: fica fora do sumário (myst.yml), não aparece no site nem no PDF. -->
+
+Esta página descreve a estrutura fixa de todos os capítulos. O arquivo [`modelos/capitulo-modelo.ipynb`](capitulo-modelo.ipynb) é o ponto de partida para escrever um capítulo novo.
 
 | # | Seção | Objetivo | Exemplo (cap. 3, Newton) |
 | --- | --- | --- | --- |
