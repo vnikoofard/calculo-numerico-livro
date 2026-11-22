@@ -82,3 +82,55 @@ def spline_cubica_natural(x, y):
             + (y[i] / hi - M[i] * hi / 6) * dx1 + (y[i + 1] / hi - M[i + 1] * hi / 6) * dx0
 
     return S
+
+
+def nos_bspline(a, b, intervalos, k=3):
+    """Vetor de nós de uma B-spline de grau ``k`` em [a, b], com ``intervalos`` pedaços iguais.
+
+    Os nós das pontas se repetem ``k + 1`` vezes ("nós presos"). Assim a base
+    soma 1 no intervalo [a, b] inteiro e tem ``intervalos + k`` funções.
+    """
+    internos = np.linspace(a, b, intervalos + 1)
+    return np.concatenate([np.full(k, float(a)), internos, np.full(k, float(b))])
+
+
+def base_bspline(x, nos, k=3):
+    """Matriz das funções de base B_{i,k}(x), pela recursão de Cox–de Boor.
+
+    Devolve um array de forma ``(len(x), len(nos) - k - 1)``: a coluna ``i`` é
+    ``B_{i,k}`` avaliada em ``x``. Funciona com arrays NumPy e com tensores
+    PyTorch (o gradiente passa pela base, como numa camada KAN).
+
+    Convenções: ``B_{i,0}`` é 1 em ``[t_i, t_{i+1})``; no último nó, ``x = t_m``,
+    vale o último intervalo não vazio, para que a base também some 1 ali.
+    Termos com denominador zero (nós repetidos) valem zero.
+    """
+    tocha = type(x).__module__.split(".")[0] == "torch"
+    if not tocha:
+        x = np.asarray(x, dtype=float)
+    t = [float(v) for v in nos]
+    m = len(t) - 1
+    if m - k < 1:
+        raise ValueError("São necessários pelo menos k + 2 nós.")
+    if any(t[i + 1] < t[i] for i in range(m)):
+        raise ValueError("Os nós precisam estar em ordem crescente.")
+
+    def indicadora(cond):
+        return cond.to(x.dtype) if tocha else cond.astype(float)
+
+    # grau 0: caixas
+    B = [indicadora((x >= t[i]) & (x < t[i + 1])) for i in range(m)]
+    ultimo = max(i for i in range(m) if t[i] < t[i + 1])
+    B[ultimo] = B[ultimo] + indicadora(x == t[-1])
+    # graus 1, ..., k: cada função mistura duas vizinhas com pesos lineares
+    for d in range(1, k + 1):
+        novo = []
+        for i in range(m - d):
+            esq = (x - t[i]) / (t[i + d] - t[i]) * B[i] if t[i + d] > t[i] else 0 * x
+            dir_ = (t[i + d + 1] - x) / (t[i + d + 1] - t[i + 1]) * B[i + 1] if t[i + d + 1] > t[i + 1] else 0 * x
+            novo.append(esq + dir_)
+        B = novo
+    if tocha:
+        import torch
+        return torch.stack(B, dim=-1)
+    return np.stack(B, axis=-1)
