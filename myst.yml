@@ -60,9 +60,6 @@ project:
         - file: livro/A-incerteza.ipynb
         - file: livro/B-desempenho-gpu.ipynb
         - file: livro/C-referencia.md
-    - title: Para autores
-      children:
-        - file: livro/modelo-capitulo.md
 
 site:
   template: book-theme
