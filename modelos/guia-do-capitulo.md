@@ -28,3 +28,4 @@ No fim de cada capítulo: uma tabela-resumo dos métodos, exercícios em três n
 - Cada figura tem uma legenda de uma frase que diz o que o leitor deve notar.
 - Interatividade com `com_controle(quadros, rotulo=...)`: sliders do Plotly que funcionam no site sem Python. No PDF aparece o quadro inicial. Não use `ipywidgets`.
 - Quando ajudar, acrescente uma versão estática (pequenos múltiplos) para o PDF.
+- O código que só desenha uma figura não aparece na leitura: a célula leva a etiqueta `remove-input` (a figura e as saídas continuam no site e no PDF, e o código continua no notebook). Se a célula mistura cálculo e desenho, divida-a: o cálculo e as verificações ficam visíveis, só o desenho fica escondido. Funções que o leitor usa mais adiante ficam numa célula visível.
